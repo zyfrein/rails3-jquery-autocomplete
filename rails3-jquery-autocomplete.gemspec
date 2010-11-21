@@ -27,11 +27,9 @@ Gem::Specification.new do |s|
      "lib/rails3-jquery-autocomplete/form_helper.rb",
      "lib/rails3-jquery-autocomplete/formtastic_plugin.rb",
      "lib/rails3-jquery-autocomplete/helpers.rb",
-     "test/active_record_controller_test.rb",
      "test/form_helper_test.rb",
      "test/generators/generator_test.rb",
      "test/helpers.rb",
-     "test/mongoid_controller_test.rb",
      "test/support/active_record.rb",
      "test/support/mongoid.rb",
      "test/test_helper.rb"
@@ -42,11 +40,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Use jQuery's autocomplete plugin with Rails 3.}
   s.test_files = [
-    "test/active_record_controller_test.rb",
      "test/form_helper_test.rb",
      "test/generators/generator_test.rb",
      "test/helpers.rb",
-     "test/mongoid_controller_test.rb",
      "test/support/active_record.rb",
      "test/support/mongoid.rb",
      "test/test_helper.rb"
