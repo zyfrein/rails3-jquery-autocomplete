@@ -5,7 +5,7 @@ module Rails3JQueryAutocomplete
   # Usage:
   # 
   # class ProductsController < Admin::BaseController
-  #   autocomplete :brand_and_products_search, [:brand, :product], [:name, :description]
+  #   autocomplete :brand_and_products_search, { :brand => [:name, :description], :product => [:name, :description]  }
   # end
   #
   # This will magically generate an action autocomplete_brand_and_products_search, so, 
@@ -21,24 +21,26 @@ module Rails3JQueryAutocomplete
   #
   #
   module ClassMethods
-    def autocomplete(name, objects, methods, options = {})
+    def autocomplete(name, targets, options = {})
 
       define_method("autocomplete_#{name}") do
         
         term = params[:term]
           
-        items = {}
+        items = []
           
         if term && !term.empty?
-          objects.each do |obj|
+          targets.each do |object, methods|
             methods.each do |method|
-              items << get_items(:model => get_object(obj), \
-              :options => options, :term => term, :method => method) 
+              items += ( get_items(:model => get_object( object ), \
+              :options => options, :term => term, :method => method ) )
+            end
+          end
         else
-          items = {}
+          items = []
         end
 
-        render :json => json_for_autocomplete(items, options[:display_value] ||= methods * "-" )
+        render :json => json_for_autocomplete(items.uniq, targets )
       end
     end
   end

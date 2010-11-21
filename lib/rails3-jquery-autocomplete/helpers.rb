@@ -4,8 +4,8 @@ module Rails3JQueryAutocomplete
   module Helpers
 
     # Returns a three keys hash 
-    def json_for_autocomplete(items, method)
-      items.collect {|item| {"id" => item.id, "label" => item.send(method), "value" => item.send(method)}}
+    def json_for_autocomplete(items, targets)
+      items.collect {|item| {"id" => item.id, "label" => item.send( targets[ item.class.name.downcase.to_sym ][0] ), "value" => item.send( targets[ item.class.name.downcase.to_sym ][0] )}}
     end
 
     # Returns parameter model_sym as a constant
