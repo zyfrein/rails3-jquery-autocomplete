@@ -3,9 +3,19 @@ module Rails3JQueryAutocomplete
   # Contains utility methods used by autocomplete
   module Helpers
 
-    # Returns a three keys hash 
+    # Returns an array [{"id" => id, "label" => label, "value" => value},{"id" => id, "label" => label, "value" => value}, ...] 
     def json_for_autocomplete(items, targets)
-      items.collect {|item| {"id" => item.id, "label" => item.send( targets[ item.class.name.downcase.to_sym ][0] ), "value" => item.send( targets[ item.class.name.downcase.to_sym ][0] )}}
+      item_id = 0
+      array = []
+      
+      items.each do |model, fields|
+        fields.each do |field, active_relation|
+          active_relation.each do |item|
+            array << {"id" => item_id += 1, "label" => item[field], "value" => item[field]}
+          end
+        end
+      end
+      array
     end
 
     # Returns parameter model_sym as a constant
@@ -34,15 +44,15 @@ module Rails3JQueryAutocomplete
       order = options[:order]
 
       case implementation
-        when :mongoid then
-          if order 
-            order.split(',').collect do |fields| 
-              sfields = fields.split
-              [sfields[0].downcase.to_sym, sfields[1].downcase.to_sym]
-            end
-          else
-            [[method.to_sym, :asc]]
-          end
+        # when :mongoid then
+        #           if order 
+        #             order.split(',').collect do |fields| 
+        #               sfields = fields.split
+        #               [sfields[0].downcase.to_sym, sfields[1].downcase.to_sym]
+        #             end
+        #           else
+        #             [[method.to_sym, :asc]]
+        #           end
         when :activerecord then 
           order || "#{method} ASC"
       end
@@ -69,12 +79,12 @@ module Rails3JQueryAutocomplete
       order = get_order(implementation, method, options)
 
       case implementation
-        when :mongoid
-          search = (is_full_search ? '.*' : '^') + term + '.*'
-          items = model.where(method.to_sym => /#{search}/i).limit(limit).order_by(order)
+        # when :mongoid
+        #           search = (is_full_search ? '.*' : '^') + term + '.*'
+        #           items = model.where(method.to_sym => /#{search}/i).limit(limit).order_by(order)
         when :activerecord
-          items = model.where(["LOWER(#{method}) LIKE ?", "#{(is_full_search ? '%' : '')}#{term.downcase}%"]) \
-            .limit(limit).order(order)
+          items = {model.name.to_sym => {method.to_sym => model.select(method).where(["LOWER(#{method}) LIKE ?", \
+                      "#{(is_full_search ? '%' : '')}#{term.downcase}%"]).limit(limit).order(order)}}
       end
     end
 

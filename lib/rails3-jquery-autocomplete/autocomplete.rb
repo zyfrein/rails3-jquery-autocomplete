@@ -27,22 +27,35 @@ module Rails3JQueryAutocomplete
         
         term = params[:term]
           
-        items = []
+        items = {}
           
         if term && !term.empty?
           targets.each do |object, methods|
             methods.each do |method|
-              items += ( get_items(:model => get_object( object ), \
+              
+              results = ( get_items(:model => get_object( object ), \
               :options => options, :term => term, :method => method ) )
+
+              results.each do |model, fields|
+                fields.each do |field, item|
+                  if item.any?
+                    if items.any? && items.has_key?(model.to_s.to_sym)
+                      items[model.to_s.to_sym][field.to_s.to_sym] = item
+                    else
+                      items[model.to_s.to_sym] = {field.to_s.to_sym => item}
+                    end
+                  end
+                end
+              end
             end
           end
         else
-          items = []
+          items = {}
         end
 
-        render :json => json_for_autocomplete(items.uniq, targets )
+        render :json => json_for_autocomplete(items, targets )
       end
     end
   end
-
+  
 end
