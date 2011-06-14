@@ -30,6 +30,10 @@ The options were not yet tested. I use the full search option that way:
 
 and I modified the autocomplete.js to accept the submit_on_select option which submit the search when an item is selected in the list by key Enter or Tab, or clicked. That was taken from the fork => https://github.com/klacointe/rails3-jquery-autocomplete
 
+I use it that way:
+
+    <%= f.autocomplete_field :uid_contains, autocomplete_radio_item_main_search_radio_items_path, :submit_on_select => true %>
+
 # Changelog
 
 * 0.1.0 Ability to use few tables and few fields from database
