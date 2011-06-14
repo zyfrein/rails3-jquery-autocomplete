@@ -8,25 +8,27 @@ I commented the parts of code which deal with mongoid. It's not supported.
 
 ## Usage
 
-*class ProductsController < Admin::BaseController
-*  autocomplete :brand_and_products_search, { :brand => [:name, :description], :product => [:name, :description]  }
-*end
-*
-*This will magically generate an action autocomplete_brand_and_products_search, so, 
-*don't forget to add it on your routes file
-*
-*  resources :products do
-*     get :autocomplete_brand_and_products_search, :on => :collection
-*  end
-*
-*Now, on your view, all you have to do is have a text field like:
-*
-*  f.text_field :brand_or_products_name, :autocomplete => autocomplete_brand_and_products_search_products_path
+    class ProductsController < Admin::BaseController
+      autocomplete :brand_and_products_search, { :brand => [:name, :description], :product => [:name, :description]  }
+    end
+
+    # This will magically generate an action autocomplete_brand_and_products_search, so, 
+    # don't forget to add it on your routes file
+     
+    resources :products do
+      get :autocomplete_brand_and_products_search, :on => :collection
+    end
+    
+    # Now, on your view, all you have to do is have a text field like:
+    
+    f.text_field :brand_or_products_name, :autocomplete => autocomplete_brand_and_products_search_products_path
 
 ## Options
-The options were not yet tested. I only use the full search option that way:
+The options were not yet tested. I use the full search option that way:
 
-*autocomplete :brand_and_products_search, { :brand => [:name, :description], :product => [:name, :description]  }, {:full => true}
+    autocomplete :brand_and_products_search, { :brand => [:name, :description], :product => [:name, :description]  }, {:full => true}
+
+and I modified the autocomplete.js to accept the submit_on_select option which submit the search when an item is selected in the list by key Enter or Tab, or clicked. That was taken from the fork => https://github.com/klacointe/rails3-jquery-autocomplete
 
 # Changelog
 
